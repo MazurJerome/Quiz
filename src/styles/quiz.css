@@ -1,0 +1,12 @@
+.body {
+  height: 100%;
+  width: 100%;
+}
+
+.body_quiz {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+}/*# sourceMappingURL=quiz.css.map */

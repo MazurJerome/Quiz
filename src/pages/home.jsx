@@ -25,10 +25,10 @@ const Home = () => {
   }, []); // Le tableau vide assure que l'effet ne s'exécute qu'une fois après le premier rendu
 
   return (
-    <div>
+    <div className="body">
       <Header />
       <h1>Bienvenue sur le Quiz</h1>
-      <div className="home-page">
+      <div className="home_page">
         {quizzes.map((quiz, index) => (
           <QuizCard
             key={index}

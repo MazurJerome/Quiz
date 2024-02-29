@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../components/footer";
 import Header from "../components/header";
+import "../styles/quiz.css";
 
 const Quiz = () => {
   const { id } = useParams();
@@ -25,24 +26,25 @@ const Quiz = () => {
     return <div>Chargement...</div>;
   }
 
-  console.log("quiz", quiz);
   return (
-    <div>
+    <div className="body">
       <Header />
-      <h2>{quiz.title}</h2>
-      <div>
-        {quiz.questions.map((question, index) => (
-          <div key={index}>
-            <h3>{`Question ${index + 1}: ${question.questionText}`}</h3>
-            <ul>
-              {question.answers.map((answer, answerIndex) => (
-                <li key={answerIndex}>{answer.text}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+      <div className="body_quiz">
+        <h2>{quiz.title}</h2>
+        <div>
+          {quiz.questions.map((question, index) => (
+            <div key={index}>
+              <h3>{`Question ${index + 1}: ${question.questionText}`}</h3>
+              <ul>
+                {question.answers.map((answer, answerIndex) => (
+                  <li key={answerIndex}>{answer.text}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <Link to="/result">Voir les résultats</Link>
       </div>
-      <Link to="/result">Voir les résultats</Link>
       <Footer />
     </div>
   );

@@ -1,9 +1,15 @@
 @charset "UTF-8";
-.home-page {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
+.body {
+  height: 100%;
+  width: 100%;
+}
+
+.home_page {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .quiz-card {
@@ -16,12 +22,13 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
-  height: 300px; /* Ou toute autre hauteur appropriée */
+  height: 300px;
+  width: 300px;
   margin: 10px; /* Assurez-vous qu'il y a de l'espace pour l'agrandissement */
 }
 
 .quiz-card:hover {
-  transform: translateY(-5px) scale(1.15); /* Ajout de scale pour agrandir */
+  transform: translateY(-5px) scale(1.1); /* Ajout de scale pour agrandir */
 }
 
 @media (max-width: 768px) {
