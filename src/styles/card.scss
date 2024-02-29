@@ -1,0 +1,43 @@
+.quiz-card {
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  position: relative;
+  height: 250px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .difficulty {
+    display: flex;
+    justify-content: flex-start;
+
+    .star {
+      color: grey; // Les étoiles grises par défaut
+
+      &.filled {
+        color: gold; // Les étoiles dorées pour la difficulté
+      }
+    }
+  }
+
+  .title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: auto;
+  }
+
+  .tags {
+    .tag {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 5px 10px;
+      margin-right: 5px;
+      font-size: 14px;
+    }
+  }
+}
