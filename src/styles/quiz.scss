@@ -1,6 +1,9 @@
 .body {
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .body_quiz {
@@ -8,5 +11,51 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 70%;
+}
+ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.answer_card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 20vh;
+  height: 20vh;
+  padding: 10px;
+  margin: 5px;
+  border: 2px solid #ccc; /* Ajusté pour la visibilité de l'animation */
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  animation: none; /* Appliquer l'animation ici */
+}
+
+.answer_card:hover {
+  background-color: #e9e9e9;
+}
+
+.selected {
+  background-color: #ade2fb; /* Couleur de surbrillance pour la sélection */
+  transform: scale(
+    1.05
+  ); /* Optionnel: légère augmentation de taille pour la sélection */
+
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(173, 226, 251, 1.5);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(173, 226, 251, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0px rgba(173, 226, 251, 0);
+  }
 }

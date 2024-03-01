@@ -1,19 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Footer from "../components/footer";
 import Header from "../components/header";
+import "../styles/resultat.css";
 
-const Result = () => {
-  // Ici, vous afficherez les résultats du quiz
+function ResultPage() {
+  const location = useLocation();
+  const { score, total } = location.state || { score: 0, total: 0 };
+
   return (
-    <div>
+    <div className="body">
       <Header />
-      <h1>Résultats du Quiz</h1>
-      {/* Afficher les résultats ici */}
-      <Link to="/">Retour à l'accueil</Link>
+      <div className="body_result">
+        <h2>Résultats du Quiz</h2>
+        <p className="result_score">
+          Votre score est de {score} sur {total}.
+        </p>
+        <Link to="/" className="home_button">
+          Retour à l'accueil
+        </Link>
+      </div>
       <Footer />
     </div>
   );
-};
+}
 
-export default Result;
+export default ResultPage;

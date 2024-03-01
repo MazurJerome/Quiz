@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/footer.css"; // Assurez-vous d'avoir créé ce fichier SASS
+import "../styles/footer.css";
 
 const Footer = () => {
   return (
@@ -7,7 +7,6 @@ const Footer = () => {
       <div className="footer-content">
         <p>© 2024 MonQuiz. Tous droits réservés.</p>
         <div className="social-links">
-          {/* Ici, vous pouvez ajouter des liens vers vos réseaux sociaux */}
           <a
             href="https://facebook.com"
             target="_blank"

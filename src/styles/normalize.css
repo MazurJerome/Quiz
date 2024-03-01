@@ -20,9 +20,6 @@ body {
   margin: 0;
   height: 100%;
 }
-#root {
-  height: 100%;
-}
 
 /**
  * Render the `main` element consistently in IE.

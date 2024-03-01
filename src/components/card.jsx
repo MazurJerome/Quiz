@@ -10,9 +10,9 @@ const QuizCard = ({ title, backgroundImage, tags, difficulty, to }) => {
   }
 
   return (
-    <Link to={to} className="quiz-card-link">
+    <Link to={to} className="quiz_card_link">
       <div
-        className="quiz-card"
+        className="quiz_card"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="difficulty"> {stars} </div>
