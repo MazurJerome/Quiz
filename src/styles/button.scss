@@ -1,0 +1,31 @@
+.button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.small {
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.large {
+  padding: 15px 30px;
+  font-size: 18px;
+}
