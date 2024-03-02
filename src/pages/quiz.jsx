@@ -16,6 +16,8 @@ const Quiz = () => {
   const [error, setError] = useState("");
   const [explanation, setExplanation] = useState("");
   const questionRef = useRef(null);
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [timerActive, setTimerActive] = useState(true);
 
   const fetchQuiz = useCallback(async () => {
     setIsLoading(true);
@@ -48,6 +50,10 @@ const Quiz = () => {
     if (currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setIsAnswerSubmitted(false);
+      setTimerActive(true); // Réactiver le timer ici
+    } else {
+      // Si c'est la dernière question, afficher les résultats
+      showResults();
     }
   };
 
@@ -56,31 +62,68 @@ const Quiz = () => {
     setIsAnswerSubmitted(false);
   };
 
-  const handleAnswerSubmit = () => {
-    setIsAnswerSubmitted(true);
-    const correctAnswerIndex = quiz.questions[
-      currentQuestionIndex
-    ].answers.findIndex((answer) => answer.correct);
-    const isCorrect =
-      selectedAnswers[currentQuestionIndex] === correctAnswerIndex;
-    const correctAnswer =
-      quiz.questions[currentQuestionIndex].answers[correctAnswerIndex];
-    setExplanation(
-      isCorrect
-        ? `En effet! C'est la bonne réponse. ${correctAnswer.explanation || ""}`
-        : `La bonne réponse est : ${correctAnswer.text}. ${
-            correctAnswer.explanation || ""
-          }`
-    );
-  };
+  const handleAnswerSubmit = useCallback(
+    (isAutoSubmit = false) => {
+      // Assurez-vous que la valeur par défaut est false
+      setIsAnswerSubmitted(true);
+      setTimerActive(false);
 
+      if (quiz && quiz.questions.length > 0) {
+        const correctAnswerIndex = quiz.questions[
+          currentQuestionIndex
+        ].answers.findIndex((answer) => answer.correct);
+        const selectedAnswerCorrect =
+          quiz.questions[currentQuestionIndex].answers[
+            selectedAnswers[currentQuestionIndex]
+          ]?.correct;
+
+        let feedback;
+        if (selectedAnswerCorrect) {
+          const correctAnswer =
+            quiz.questions[currentQuestionIndex].answers[correctAnswerIndex];
+          feedback = `En effet! ${correctAnswer.explanation || ""}`;
+        } else {
+          const correctAnswer =
+            quiz.questions[currentQuestionIndex].answers[correctAnswerIndex];
+          feedback = `Incorrect. La bonne réponse est : ${
+            correctAnswer.text
+          }. ${
+            correctAnswer.explanation ||
+            "Aucune explication supplémentaire n'est fournie."
+          }`;
+        }
+        setExplanation(feedback);
+      }
+    },
+    [currentQuestionIndex, quiz, selectedAnswers]
+  );
+  const autoSubmitAnswer = useCallback(() => {
+    if (!isAnswerSubmitted) {
+      handleAnswerSubmit(false); // Passer false pour indiquer une réponse forcée/fausse
+    }
+  }, [isAnswerSubmitted, handleAnswerSubmit]);
   const calculateScore = () =>
     quiz.questions.reduce(
       (score, question, index) =>
         score + (question.answers[selectedAnswers[index]]?.correct ? 1 : 0),
       0
     );
+  useEffect(() => {
+    if (timerActive && quiz && quiz.questions) {
+      setTimeLeft(15);
+      const timerId = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerId);
+            autoSubmitAnswer();
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
 
+      return () => clearInterval(timerId);
+    }
+  }, [currentQuestionIndex, timerActive, quiz, autoSubmitAnswer]);
   const showResults = () =>
     navigate("/result", {
       state: { score: calculateScore(), total: quiz.questions.length },
@@ -136,6 +179,7 @@ const Quiz = () => {
           >
             {isAnswerSubmitted && <div>{explanation}</div>}
           </div>
+          <div className="timer">Temps restant : {timeLeft} secondes</div>
           <div className="button_container">
             {selectedAnswers[currentQuestionIndex] !== undefined &&
               !isAnswerSubmitted && (
