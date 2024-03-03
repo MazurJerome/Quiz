@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Button from "../components/button"; // Ajustez le chemin selon votre structure
+import Button from "../components/button";
 import Footer from "../components/footer";
 import Header from "../components/header";
-import "../styles/quiz.css"; // Ou le chemin vers votre fichier CSS généré à partir de SCSS
+import "../styles/quiz.css";
 
 const Quiz = () => {
   const { id } = useParams();

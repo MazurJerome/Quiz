@@ -1,0 +1,77 @@
+.body_login {
+  width: 100%;
+  height: 70.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #240046;
+
+  .form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+
+    &.registering {
+      transform: translateY(-20px);
+    }
+
+    .toggle {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    .login-form,
+    .register-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logged-in {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+
+      p {
+        color: #6d44b8;
+        font-weight: bolder;
+      }
+    }
+  }
+}
+
+.button {
+  background-color: #573b8a;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #6d44b8;
+  }
+}
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
