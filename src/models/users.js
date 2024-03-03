@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema({
   codePostal: String,
   photo: String, // Ajout d'un champ pour l'URL de la photo de profil
   createdAt: { type: Date, default: Date.now },
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Quiz",
+    },
+  ],
 });
 
 const User = mongoose.model("user", userSchema);

@@ -10,34 +10,62 @@
   justify-content: space-between;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 
-  .difficulty {
-    display: flex;
-    justify-content: flex-start;
+  &:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  }
 
-    .star {
-      color: grey; // Les étoiles grises par défaut
+  .quiz_card_favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #ffd700; // Jaune doré pour l'étoile non favorite
+    cursor: pointer;
+    z-index: 10;
 
-      &.filled {
-        color: gold; // Les étoiles dorées pour la difficulté
-      }
+    &.filled {
+      color: #ffc107; // Jaune un peu plus foncé pour l'étoile favorite
     }
   }
 
-  .title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin: auto;
-  }
+  .quiz_card_content {
+    text-decoration: none; // Supprime le soulignement des liens
+    color: white; // Assure que le texte à l'intérieur du lien est blanc
 
-  .tags {
-    .tag {
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 15px;
-      padding: 5px 10px;
-      margin-right: 5px;
-      font-size: 14px;
+    .difficulty {
+      display: flex;
+      justify-content: flex-start;
+
+      .star {
+        color: grey; // Les étoiles grises par défaut
+
+        &.filled {
+          color: gold; // Les étoiles dorées pour la difficulté
+        }
+      }
+    }
+
+    .title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin: auto;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .tag {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 15px;
+        padding: 5px 10px;
+        margin: 5px;
+        font-size: 14px;
+      }
     }
   }
 }

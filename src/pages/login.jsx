@@ -93,8 +93,8 @@ const Login = () => {
         <div className="form-container">
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <div className="toggle">
-            <Button onClick={() => setIsRegistering(false)}>Log in</Button>
-            <Button onClick={() => setIsRegistering(true)}>Register</Button>
+            <Button onClick={() => setIsRegistering(false)}>Connexion</Button>
+            <Button onClick={() => setIsRegistering(true)}>Inscription</Button>
           </div>
 
           {!isRegistering ? (
@@ -114,7 +114,7 @@ const Login = () => {
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                 />
-                <Button type="submit">Log in</Button>
+                <Button type="submit">Connexion</Button>
               </form>
             </div>
           ) : (
@@ -141,7 +141,7 @@ const Login = () => {
                   value={registerPassword}
                   onChange={(e) => setRegisterPassword(e.target.value)}
                 />
-                <Button type="submit">Register</Button>
+                <Button type="submit">Inscription</Button>
               </form>
             </div>
           )}

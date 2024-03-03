@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import Footer from "../components/footer";
@@ -9,6 +9,7 @@ const Account = () => {
   const { logout, token } = useAuth();
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("profile");
+  const [favorites, setFavorites] = useState([]);
 
   const [userInfo, setUserInfo] = useState({
     nom: "",
@@ -23,7 +24,9 @@ const Account = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (token) {
+      if (!token) {
+        navigate("/login");
+      } else {
         try {
           const response = await fetch(
             "http://localhost:5000/api/users/profile",
@@ -112,6 +115,49 @@ const Account = () => {
     }
   };
 
+  const fetchFavorites = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/users/favorites",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!response.ok)
+        throw new Error("Problème lors de la récupération des favoris");
+      const favorites = await response.json();
+      // Mettre à jour l'état avec les favoris chargés
+      setFavorites(favorites);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (selectedMenu === "favorites") {
+      fetchFavorites();
+    }
+  }, [selectedMenu, fetchFavorites]);
+
+  const removeFavorite = async (quizId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/users/favorites/${quizId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Problème lors de la suppression du favori");
+      }
+      setFavorites(favorites.filter((favorite) => favorite._id !== quizId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -127,9 +173,6 @@ const Account = () => {
             <li onClick={() => setSelectedMenu("favorites")}>Favoris</li>
             <li onClick={() => setSelectedMenu("history")}>
               Historiques des quizzs effectués
-            </li>
-            <li onClick={() => setSelectedMenu("notifications")}>
-              Notifications
             </li>
             <li onClick={handleLogout}>Déconnexion</li>
           </ul>
@@ -197,9 +240,38 @@ const Account = () => {
             </div>
           )}
 
-          {selectedMenu === "favorites" && <div>Contenu des Favoris</div>}
+          {selectedMenu === "favorites" && (
+            <div>
+              <h2>Favoris:</h2>
+              <div className="favorites_container">
+                {favorites.map((favorite) => (
+                  <div
+                    key={favorite._id}
+                    className="favorite_card" // Définit l'image du quiz comme fond
+                    style={{
+                      backgroundImage: `url(${favorite.backgroundImage})`,
+                    }}
+                    onClick={() => navigate(`/quiz/${favorite._id}`)}
+                  >
+                    <div className="favorite_content">
+                      <h3>{favorite.title}</h3>
+                      <button
+                        className="remove_favorite_btn"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Empêche le clic sur le bouton de déclencher la redirection
+                          removeFavorite(favorite._id);
+                        }}
+                      >
+                        Retirer
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {selectedMenu === "history" && <div>Historique des Quizzs</div>}
-          {selectedMenu === "notifications" && <div>Notifications</div>}
         </main>
       </div>
       <Footer />

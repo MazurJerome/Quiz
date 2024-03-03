@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PATCH"],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
   })
 );
 
@@ -74,6 +74,58 @@ app.get("/api/quizzes/:id", async (req, res) => {
     res.json(quiz);
   } catch (error) {
     res.status(500).send("Erreur serveur");
+  }
+});
+
+app.post("/api/users/favorites/add", authenticateToken, async (req, res) => {
+  const { quizId } = req.body;
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).send({ message: "User not found" });
+
+    if (!user.favorites.includes(quizId)) {
+      user.favorites.push(quizId);
+      await user.save();
+      res.status(200).send({ message: "Quiz ajouté aux favoris" });
+    } else {
+      res.status(400).send({ message: "Quiz déjà dans les favoris" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Erreur lors de l'ajout aux favoris" });
+  }
+});
+
+app.delete(
+  "/api/users/favorites/:quizId",
+  authenticateToken,
+  async (req, res) => {
+    console.log("DELETE FAVORITE", req.params.quizId);
+    const { quizId } = req.params;
+    try {
+      const user = await User.findById(req.user._id);
+      if (!user) return res.status(404).send({ message: "User not found" });
+
+      user.favorites = user.favorites.filter(
+        (favorite) => favorite.toString() !== quizId
+      );
+      await user.save();
+      res.status(200).send({ message: "Quiz supprimé des favoris" });
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Erreur lors de la suppression des favoris" });
+    }
+  }
+);
+
+app.get("/api/users/favorites", authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate("favorites");
+    if (!user) return res.status(404).send({ message: "User not found" });
+
+    res.json(user.favorites);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching favorites" });
   }
 });
 
