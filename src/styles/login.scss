@@ -35,6 +35,7 @@
 
     input {
       padding: 10px;
+      margin: 15px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
 
@@ -47,6 +48,7 @@
     .register-form {
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
 
     .logged-in {
@@ -66,10 +68,7 @@
 .button {
   background-color: #573b8a;
   color: white;
-  padding: 10px 15px;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
 
   &:hover {
     background-color: #6d44b8;

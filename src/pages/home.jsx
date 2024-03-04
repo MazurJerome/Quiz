@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import QuizCard from "../components/card";
 import Footer from "../components/footer";
@@ -8,7 +7,6 @@ import "../styles/home.css";
 
 const Home = () => {
   const [quizzes, setQuizzes] = useState([]);
-  const navigate = useNavigate();
   const [favoritesIds, setFavoritesIds] = useState([]);
   const { token } = useAuth();
 
@@ -34,21 +32,18 @@ const Home = () => {
   }, [token]);
 
   const toggleFavorite = (quizId) => {
-    // Vérifier si le quiz est actuellement un favori
     const isCurrentlyFavorite = favoritesIds.includes(quizId);
-    // Déterminer l'endpoint et la méthode HTTP en fonction de si on ajoute ou supprime un favori
     const endpoint = isCurrentlyFavorite
-      ? `http://localhost:5000/api/users/favorites/${quizId}` // Endpoint pour supprimer des favoris
-      : `http://localhost:5000/api/users/favorites/add`; // Endpoint pour ajouter aux favoris
+      ? `http://localhost:5000/api/users/favorites/${quizId}`
+      : `http://localhost:5000/api/users/favorites/add`;
     const method = isCurrentlyFavorite ? "DELETE" : "POST";
 
     fetch(endpoint, {
       method: method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Assurez-vous d'inclure le token JWT
+        Authorization: `Bearer ${token}`,
       },
-      // Inclure le corps de la requête uniquement pour l'ajout d'un favori
       ...(method === "POST" && { body: JSON.stringify({ quizId }) }),
     })
       .then((response) => {
@@ -58,12 +53,9 @@ const Home = () => {
         return response.json();
       })
       .then(() => {
-        // Mettre à jour l'état des identifiants des favoris
         if (isCurrentlyFavorite) {
-          // Si le quiz était un favori, le retirer de l'état
           setFavoritesIds((prevIds) => prevIds.filter((id) => id !== quizId));
         } else {
-          // Si le quiz n'était pas un favori, l'ajouter à l'état
           setFavoritesIds((prevIds) => [...prevIds, quizId]);
         }
       })

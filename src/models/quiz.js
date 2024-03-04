@@ -15,6 +15,7 @@ const quizSchema = new mongoose.Schema({
       ],
     },
   ],
+  backgroundImage: { type: String, required: true },
 });
 
 const Quiz = mongoose.model("Quiz", quizSchema);

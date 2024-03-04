@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import Button from "../components/button";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import "../styles/account.css";
@@ -10,6 +11,8 @@ const Account = () => {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("profile");
   const [favorites, setFavorites] = useState([]);
+  const fileInputRef = useRef(null);
+  const [completedQuizzes, setCompletedQuizzes] = useState([]);
 
   const [userInfo, setUserInfo] = useState({
     nom: "",
@@ -18,9 +21,28 @@ const Account = () => {
     telephone: "",
     adresse: "",
     codePostal: "",
-    photo:
-      "https://www.shutterstock.com/image-vector/default-profile-picture-avatar-photo-600nw-1725917284.jpg", // URL par défaut
+    photo: "/uploads/defaultProfile.webp", // URL par défaut
   });
+
+  const fetchCompletedQuizzes = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/users/completed-quizzes", // Assurez-vous que cette route existe et renvoie les données correctes
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!response.ok)
+        throw new Error(
+          "Problème lors de la récupération de l'historique des quiz"
+        );
+      const quizzes = await response.json();
+      setCompletedQuizzes(quizzes);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [token]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -138,7 +160,10 @@ const Account = () => {
     if (selectedMenu === "favorites") {
       fetchFavorites();
     }
-  }, [selectedMenu, fetchFavorites]);
+    if (selectedMenu === "history") {
+      fetchCompletedQuizzes();
+    }
+  }, [selectedMenu, fetchFavorites, fetchCompletedQuizzes]);
 
   const removeFavorite = async (quizId) => {
     try {
@@ -162,9 +187,12 @@ const Account = () => {
     logout();
     navigate("/login");
   };
+  const handleFileInputClick = () => {
+    fileInputRef.current.click();
+  };
 
   return (
-    <div className="account_page">
+    <div className="body">
       <Header />
       <div className="account_container">
         <aside>
@@ -181,14 +209,25 @@ const Account = () => {
           {selectedMenu === "profile" && (
             <div className="profile_content">
               <div className="profile_header">
-                <input type="file" onChange={handlePhotoUpload} />
-                {userInfo.photo && (
-                  <img
-                    className="profile_photo"
-                    src={`http://localhost:5000${userInfo.photo}`} // Assurez-vous que cela correspond au chemin retourné par l'API
-                    alt="Profile"
-                  />
-                )}
+                <img
+                  className="profile_photo"
+                  src={userInfo.photo}
+                  alt="Profile"
+                />
+                <div
+                  className="change_photo_icon"
+                  onClick={handleFileInputClick}
+                  title="Changer la photo"
+                >
+                  {/* Insérez ici votre icône de croix */}
+                  &#10005;
+                </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handlePhotoUpload}
+                  style={{ display: "none" }}
+                />
                 <div className="user_info">
                   <h3>
                     {userInfo.prenom} {userInfo.nom}
@@ -234,9 +273,9 @@ const Account = () => {
                   placeholder="Code Postal"
                 />
               </div>
-              <button onClick={handleSaveProfile}>
+              <Button onClick={handleSaveProfile}>
                 Sauvegarder les informations
-              </button>
+              </Button>
             </div>
           )}
 
@@ -244,34 +283,81 @@ const Account = () => {
             <div>
               <h2>Favoris:</h2>
               <div className="favorites_container">
-                {favorites.map((favorite) => (
-                  <div
-                    key={favorite._id}
-                    className="favorite_card" // Définit l'image du quiz comme fond
-                    style={{
-                      backgroundImage: `url(${favorite.backgroundImage})`,
-                    }}
-                    onClick={() => navigate(`/quiz/${favorite._id}`)}
-                  >
-                    <div className="favorite_content">
-                      <h3>{favorite.title}</h3>
-                      <button
-                        className="remove_favorite_btn"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Empêche le clic sur le bouton de déclencher la redirection
-                          removeFavorite(favorite._id);
-                        }}
-                      >
-                        Retirer
-                      </button>
+                {favorites.length > 0 ? (
+                  favorites.map((favorite) => (
+                    <div
+                      key={favorite._id}
+                      className="favorite_card"
+                      style={{
+                        backgroundImage: `url(${favorite.backgroundImage})`,
+                      }}
+                      onClick={() => navigate(`/quiz/${favorite._id}`)}
+                    >
+                      <div className="favorite_content">
+                        <h3>{favorite.title}</h3>
+                        <button
+                          className="remove_favorite_btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFavorite(favorite._id);
+                          }}
+                        >
+                          Retirer
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <h2>Vous n'avez pas encore de favoris</h2>
+                )}
               </div>
             </div>
           )}
 
-          {selectedMenu === "history" && <div>Historique des Quizzs</div>}
+          {selectedMenu === "history" && (
+            <div>
+              <h2>Historique des Quizzs:</h2>
+              <div className="history_container">
+                {completedQuizzes.length > 0 ? (
+                  completedQuizzes.map((quiz) => (
+                    <div
+                      key={quiz._id}
+                      className="history_card"
+                      style={{
+                        backgroundImage: `url(${quiz.backgroundImage})`, // Utilisation de l'image de fond
+                      }}
+                      onClick={() => navigate(`/quiz/${quiz._id}`)}
+                    >
+                      <h3>{quiz.title}</h3>
+                      <p>Score: {quiz.score} / 10</p>{" "}
+                      {/* Affichage du score total */}
+                      <p>
+                        Date:{" "}
+                        {new Date(quiz.completedAt).toLocaleDateString("fr-FR")}
+                      </p>
+                      <div className="score_feedback">
+                        {quiz.score / quiz.totalQuestions === 1 ? (
+                          <span className="perfect_score">Parfait!</span>
+                        ) : quiz.score / quiz.totalQuestions >= 0.8 ? (
+                          <span className="high_score">Excellent!</span>
+                        ) : quiz.score / quiz.totalQuestions >= 0.6 ? (
+                          <span className="medium_score">Bien joué!</span>
+                        ) : quiz.score / quiz.totalQuestions >= 0.4 ? (
+                          <span className="low_score">Pas mal</span>
+                        ) : (
+                          <span className="needs_improvement">
+                            Vous ferez mieux la prochaine fois
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <h2>Aucun quizz effectué pour l'instant</h2>
+                )}
+              </div>
+            </div>
+          )}
         </main>
       </div>
       <Footer />

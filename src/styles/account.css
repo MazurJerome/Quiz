@@ -1,30 +1,21 @@
-.account_page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-}
-
 .account_container {
-  width: 100%;
   display: flex;
-  flex-grow: 1;
+  width: 100%;
+  height: 70vh;
 }
 
 .account_menu {
   width: 100%;
-  max-width: 200px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  max-width: 20vh;
+  flex-grow: 1;
   background-color: #f0f0f0;
-  padding: 20px;
+  padding: 2vh;
   margin: 0;
-  justify-content: space-around;
   list-style: none;
 }
 .account_menu li {
-  padding: 20px;
+  padding: 5vh;
   cursor: pointer;
 }
 .account_menu li:hover {
@@ -32,8 +23,8 @@
 }
 
 .account_content {
-  flex-basis: 80%;
-  padding: 20px;
+  flex-grow: 5;
+  padding: 2vh;
 }
 
 .profile_content {
@@ -42,97 +33,142 @@
 }
 
 .profile_header {
+  position: relative;
   display: flex;
   align-items: center;
+  padding-left: 7vh;
 }
-
-.profile_photo {
-  width: 100px;
-  height: 100px;
+.profile_header .profile_photo {
+  width: 15vh;
+  height: 15vh;
   border-radius: 50%;
-  margin-right: 20px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin-left: 2vh;
+}
+.profile_header .change_photo_icon {
+  position: absolute;
+  bottom: -1vh;
+  left: 7vh;
+  background-color: #ccc;
+  color: white;
+  font-size: 2vh;
+  padding: 1vh;
+  border-radius: 100%;
+  cursor: pointer;
 }
 
+.user_info h3,
 .user_info p {
-  margin: 0;
-  padding: 5px;
+  padding-left: 10vh;
+  margin: 0.5vh 0;
 }
 
 .profile_form {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
-  margin-top: 20px;
+  justify-content: space-around;
+  margin-top: 2vh;
 }
-
 .profile_form input {
-  width: 30%;
+  width: calc(42% - 4vh);
   margin: 3vh;
-  padding: 8px;
+  padding: 1vh;
   border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.profile_content button {
-  padding: 10px;
-  background-color: #4caf50; /* Green */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.profile_content button:hover {
-  background-color: #45a049;
-}
-
-.user_photo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-right: 20px;
+  border-radius: 0.5vh;
 }
 
 .favorites_container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 2vh;
 }
 
+.history_card,
 .favorite_card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-  width: 200px;
-  height: 250px; /* Ajustez selon le besoin */
-  cursor: pointer;
+  position: relative;
   background-size: cover;
   background-position: center;
-  position: relative;
-  display: flex;
-  align-items: flex-end; /* Aligner le contenu en bas */
-}
-
-.favorite_card:hover {
-  background-color: #f0f0f0;
-}
-
-.favorite_content {
-  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
-  color: white; /* Texte en blanc pour contraster avec le fond sombre */
-  padding: 10px;
-  border-radius: 8px;
+  height: 40vh;
+  width: 45vh;
+  margin: 3vh;
+}
+.history_card:hover,
+.favorite_card:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-5px) scale(1.075);
+}
+
+.favorite_content {
+  color: white;
+  padding: 1vh;
 }
 
 .remove_favorite_btn {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 1vh;
+  right: 1vh;
   cursor: pointer;
+}
+
+.history_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacement entre les cartes */
+  justify-content: start;
+}
+
+.history_card {
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: calc(33.333% - 20px); /* Trois cartes par ligne avec un espacement */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.history_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.history_card h3 {
+  margin-top: 0;
+  font-weight: bolder;
+}
+
+.history_card p {
+  margin: 5px 0;
+  font-weight: bolder;
+}
+
+.score_feedback {
+  margin-top: 10px;
+}
+
+.perfect_score {
+  color: green;
+}
+
+.high_score {
+  color: greenyellow;
+}
+
+.medium_score {
+  color: orange;
+}
+
+.low_score {
+  color: lightblue;
+}
+
+.needs_improvement {
+  color: red;
 }/*# sourceMappingURL=account.css.map */

@@ -26,7 +26,6 @@ const QuizCard = ({
       className="quiz_card"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Rendre l'étoile cliquable sans propager l'événement au Link */}
       <div className="quiz_card_favorite" onClick={handleFavoriteClick}>
         {isFavorite ? (
           <span className="favorite_star filled">★</span>

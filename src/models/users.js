@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema({
       ref: "Quiz",
     },
   ],
+  completedQuizzes: [
+    {
+      quizId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Quiz",
+      },
+      score: Number,
+      completedAt: Date,
+    },
+  ],
 });
 
 const User = mongoose.model("user", userSchema);

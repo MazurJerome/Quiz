@@ -126,7 +126,11 @@ const Quiz = () => {
   }, [currentQuestionIndex, timerActive, quiz, autoSubmitAnswer]);
   const showResults = () =>
     navigate("/result", {
-      state: { score: calculateScore(), total: quiz.questions.length },
+      state: {
+        score: calculateScore(),
+        total: quiz.questions.length,
+        quizId: id,
+      },
     });
 
   if (isLoading) return <div>Chargement...</div>;

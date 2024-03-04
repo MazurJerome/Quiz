@@ -3,12 +3,10 @@
   background-position: center;
   color: #fff;
   position: relative;
-  height: 250px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
@@ -28,8 +26,14 @@
   color: #ffc107;
 }
 .quiz_card .quiz_card_content {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
   color: white;
+  text-shadow: 0 0 3px black, 0 0 5px #0000ff;
 }
 .quiz_card .quiz_card_content .difficulty {
   display: flex;
@@ -42,7 +46,8 @@
   color: gold;
 }
 .quiz_card .quiz_card_content .title {
-  text-align: center;
+  display: flex;
+  text-align: left;
   font-size: 24px;
   font-weight: bold;
   margin: auto;

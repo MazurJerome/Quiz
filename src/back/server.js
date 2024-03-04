@@ -99,7 +99,6 @@ app.delete(
   "/api/users/favorites/:quizId",
   authenticateToken,
   async (req, res) => {
-    console.log("DELETE FAVORITE", req.params.quizId);
     const { quizId } = req.params;
     try {
       const user = await User.findById(req.user._id);
@@ -159,6 +158,111 @@ app.post("/api/users/login", async (req, res) => {
     res.send({ token });
   } catch (error) {
     res.status(500).send({ message: "Internal server error" });
+  }
+});
+
+// Route pour obtenir l'historique des quiz complétés par l'utilisateur
+app.get("/api/users/completed-quizzes", authenticateToken, async (req, res) => {
+  try {
+    // Utilisez req.user._id pour identifier l'utilisateur authentifié
+    const user = await User.findById(req.user._id).populate({
+      path: "completedQuizzes.quizId",
+      select: "title backgroundImage",
+    });
+
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé" });
+    }
+
+    // Préparez les données à renvoyer
+    const completedQuizzes = user.completedQuizzes.map((quiz) => ({
+      _id: quiz.quizId._id,
+      title: quiz.quizId.title,
+      backgroundImage: quiz.quizId.backgroundImage, // Ajoutez l'URL de l'image de fond
+      score: quiz.score,
+      completedAt: quiz.completedAt,
+    }));
+
+    res.json(completedQuizzes);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération de l'historique des quiz:",
+      error
+    );
+    res.status(500).send({
+      message:
+        "Erreur serveur lors de la récupération de l'historique des quiz",
+    });
+  }
+});
+
+app.post("/api/users/complete-quiz", authenticateToken, async (req, res) => {
+  const { quizId, score } = req.body;
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).send("Utilisateur non trouvé");
+    }
+
+    // Logique pour ajouter ou mettre à jour le quiz complété
+    let existingQuizIndex = user.completedQuizzes.findIndex(
+      (quiz) => quiz.quizId.toString() === quizId
+    );
+
+    if (existingQuizIndex !== -1) {
+      // Mettre à jour le score si supérieur
+      if (user.completedQuizzes[existingQuizIndex].score < score) {
+        user.completedQuizzes[existingQuizIndex].score = score;
+        user.completedQuizzes[existingQuizIndex].completedAt = new Date();
+      }
+    } else {
+      // Ajouter un nouveau quiz complété
+      user.completedQuizzes.push({ quizId, score, completedAt: new Date() });
+    }
+
+    // Fusionne les résultats identiques
+    user.completedQuizzes = user.completedQuizzes.reduce((acc, current) => {
+      const x = acc.find(
+        (item) => item.quizId.toString() === current.quizId.toString()
+      );
+      if (!x) {
+        return acc.concat([current]);
+      } else if (x.score < current.score) {
+        x.score = current.score;
+        x.completedAt = current.completedAt;
+      }
+      return acc;
+    }, []);
+    // Tentative de sauvegarde
+    try {
+      await user.save();
+      res.status(200).send("Quiz enregistré avec succès.");
+    } catch (error) {
+      if (error.name === "VersionError") {
+        // Réessayer la sauvegarde si erreur de version
+        try {
+          await user.save();
+          res.status(200).send("Quiz enregistré avec succès après réessai.");
+        } catch (secondError) {
+          console.error(
+            "Erreur lors du réessai d'enregistrement du quiz:",
+            secondError
+          );
+          res
+            .status(500)
+            .send("Erreur lors de l'enregistrement du quiz après réessai.");
+        }
+      } else {
+        console.error(
+          "Erreur lors de l'enregistrement du quiz terminé:",
+          error
+        );
+        res.status(500).send("Erreur lors de l'enregistrement du quiz.");
+      }
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'utilisateur:", error);
+    res.status(500).send("Erreur serveur.");
   }
 });
 
